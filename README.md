@@ -8,4 +8,6 @@ php composer.phar install
 
 ### Running
 
+```shell
 php src/demo.php
+```
