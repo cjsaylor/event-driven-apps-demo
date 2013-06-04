@@ -1,0 +1,28 @@
+{
+    "name": "eda-demo",
+    "type": "library",
+    "description": "Demo event driven application",
+    "keywords": ["demo"],
+    "homepage": "http://chris-saylor.com/",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Chris Saylor",
+            "email": "cjsaylor@gmail.com",
+            "homepage": "http://chris-saylor.com"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/event-dispatcher": ">=2.1"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Esa": "src/"
+        }
+    }
+
+}
