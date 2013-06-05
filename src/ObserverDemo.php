@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class Demo {
+class ObserverDemo {
 
 	protected $dispatcher;
 
@@ -14,8 +14,8 @@ class Demo {
 
 	public function __construct() {
 		$this->dispatcher = new EventDispatcher();
-		$this->dispatcher->addListener('execute1.after', array('DemoPlugin', 'callback'));
-		$this->dispatcher->addListener('execute1.after', array('DemoPlugin', 'callback2'));
+		$this->dispatcher->addListener('execute.after', array('DemoPlugin', 'callback'));
+		$this->dispatcher->addListener('execute.after', array('DemoPlugin', 'callback2'));
 	}
 
 	public function testOut() {
@@ -24,22 +24,22 @@ class Demo {
 
 }
 
-class Demo1 extends Demo {
+class Demo1 extends ObserverDemo {
 
 	public function execute() {
 		$this->testOut();
-		$this->dispatcher->dispatch('execute1.after', new GenericEvent($this));
+		$this->dispatcher->dispatch('execute.after', new GenericEvent($this));
 		echo "Final Output - ";
 		$this->testOut();
 	}
 
 }
 
-class Demo2 extends Demo {
+class Demo2 extends ObserverDemo {
 
 	public function execute() {
 		$this->testOut();
-		$this->dispatcher->dispatch('execute1.after', new GenericEvent($this, array('interrupt' => true)));
+		$this->dispatcher->dispatch('execute.after', new GenericEvent($this, array('interrupt' => true)));
 		echo "Final Output - ";
 		$this->testOut();
 	}
@@ -66,7 +66,7 @@ class DemoPlugin {
 
 // Execution
 
-echo "Demo 1:\n\n";
+echo "\nDemo 1:\n\n";
 $demo1 = new Demo1();
 $demo1->execute();
 
