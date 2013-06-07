@@ -48,16 +48,16 @@ class DemoPlugin implements EventSubscriberInterface {
 class Demo1 extends SubscriberDemo {
 
 	public function execute() {
+		echo "\nDemo1:\n\n";
 		$this->testOut();
 		$this->dispatcher->dispatch('execute.before', new GenericEvent($this));
-		
+
+		// Some logic would exist in between
+
 		$this->dispatcher->dispatch('execute.after', new GenericEvent($this));
-		echo "Final Output - ";
-		$this->testOut();
 	}
 
 }
 
-echo "\nDemo1:\n\n";
 $demo1 = new Demo1();
 $demo1->execute();

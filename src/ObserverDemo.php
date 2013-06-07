@@ -22,27 +22,11 @@ class ObserverDemo {
 		echo "Output: " . $this->result . "\n";
 	}
 
-}
-
-class Demo1 extends ObserverDemo {
-
 	public function execute() {
-		$this->testOut();
-		$this->dispatcher->dispatch('execute.after', new GenericEvent($this));
-		echo "Final Output - ";
-		$this->testOut();
+		echo "\n" . get_class($this) . ":\n\n";
+		echo "Initial value: " . $this->result . "\n";
 	}
 
-}
-
-class Demo2 extends ObserverDemo {
-
-	public function execute() {
-		$this->testOut();
-		$this->dispatcher->dispatch('execute.after', new GenericEvent($this, array('interrupt' => true)));
-		echo "Final Output - ";
-		$this->testOut();
-	}
 }
 
 class DemoPlugin {
@@ -50,7 +34,6 @@ class DemoPlugin {
 	public static function callback(Event $e) {
 		$e->getSubject()->result = '2';
 		$e->getSubject()->testOut();
-		$eventArgs = $e->getArguments();
 		if ($e->hasArgument('interrupt') && $e->getArgument('interrupt')) {
 			$e->stopPropagation();
 		}
@@ -64,12 +47,27 @@ class DemoPlugin {
 
 }
 
-// Execution
+// Demo1 executes all listeners
+class Demo1 extends ObserverDemo {
 
-echo "\nDemo 1:\n\n";
+	public function execute() {
+		parent::execute();
+		$this->dispatcher->dispatch('execute.after', new GenericEvent($this));
+	}
+
+}
+
+// Demo2 executes the first listener which then ends propagation
+class Demo2 extends ObserverDemo {
+
+	public function execute() {
+		parent::execute();
+		$this->dispatcher->dispatch('execute.after', new GenericEvent($this, array('interrupt' => true)));
+	}
+}
+
 $demo1 = new Demo1();
 $demo1->execute();
 
-echo "\nDemo 2: \n\n";
 $demo2 = new Demo2();
-$demo2->execute();
+//$demo2->execute();
