@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require dirname(__FILE__) . '/repository.php';
 
 class Cart {
@@ -13,6 +15,10 @@ class Cart {
 			$this->items = $items;
 		}
 		return $this->items;
+	}
+
+	public function __destruct() {
+		$_SESSION['cart'] = $this->export();
 	}
 
 	public function add($item, $quantity = 1) {
