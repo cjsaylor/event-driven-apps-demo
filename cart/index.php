@@ -1,6 +1,4 @@
 <?php
-	session_start();
-
 	require dirname(__FILE__) . '/lib/cart.php';
 
 	if (empty($_SESSION['cart'])) {

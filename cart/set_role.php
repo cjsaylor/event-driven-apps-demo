@@ -10,5 +10,4 @@ if (empty($_SESSION['cart'])) {
 }
 
 $cart->role($_GET['role']);
-$_SESSION['cart'] = $cart->export();
 header("Location: /event-driven-apps-demo/cart/index.php");

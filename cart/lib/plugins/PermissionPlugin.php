@@ -8,6 +8,7 @@ class PermissionPlugin implements EventSubscriberInterface {
 	public static function getSubscribedEvents() {
 		return array(
 			'cart.beforeAdd' => 'checkPermissions',
+			'cart.beforeUpdate' => 'checkPermissions',
 			'cart.refresh' => 'checkPermissions'
 		);
 	}

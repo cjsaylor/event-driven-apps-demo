@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/repository.php';
 
@@ -26,6 +28,10 @@ class Cart {
 				$this->dispatcher->addSubscriber(new $plugin);
 			}
 		}
+	}
+
+	public function __destruct() {
+		$_SESSION['cart'] = $this->export();
 	}
 
 	public function items($items = null) {
