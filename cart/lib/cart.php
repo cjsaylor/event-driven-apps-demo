@@ -62,7 +62,7 @@ class Cart {
 
 	public function remove($item, $clear = false) {
 		// Item existence check
-		if (!in_array($item, $this->items)) {
+		if (!array_key_exists($item, $this->items)) {
 			return;
 		}
 		// Do the removal
