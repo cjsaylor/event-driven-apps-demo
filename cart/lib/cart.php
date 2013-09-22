@@ -1,12 +1,32 @@
 <?php
 
+require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 require dirname(__FILE__) . '/repository.php';
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
+
 class Cart {
+
+	private $plugins = array(
+		'AvailabilityPlugin',
+		'PermissionPlugin',
+	);
 
 	protected $items = array();
 
 	protected $role;
+
+	public function __construct() {
+		$this->dispatcher = new EventDispatcher();
+		foreach ($this->plugins as $plugin) {
+			$path = dirname(__FILE__) . '/plugins/' . $plugin . '.php';
+			if (file_exists($path)) {
+				include $path;
+				$this->dispatcher->addSubscriber(new $plugin);
+			}
+		}
+	}
 
 	public function items($items = null) {
 		if ($items !== null) {
@@ -16,20 +36,13 @@ class Cart {
 	}
 
 	public function add($item, $quantity = 1) {
-		// Item existence check
 		if (!in_array($item, array_keys(Repository::$items))) {
 			throw new Exception('Item not found.');
 		}
-		// Permission check
-		if (!empty(Repository::$items[$item]['role']) && !in_array($this->role, Repository::$items[$item]['role'])) {
-			throw new Exception('Role must be: ' . implode(', ', Repository::$items[$item]['role']));
-		}
-		// Availability check
-		if (isset($this->items[$item]) && $this->items[$item]['quantity'] + $quantity > Repository::$items[$item]['available']) {
-			throw new Exception('Item does not have sufficient availability.');
-		} elseif (Repository::$items[$item]['available'] < 1) {
-			throw new Exception('Item does not have sufficient availability.');
-		}
+		$this->dispatcher->dispatch('cart.beforeAdd', new GenericEvent($this, array(
+			'item' => $item,
+			'quantity' => $quantity
+		)));
 		// Do the addition
 		if (!empty($this->items[$item])) {
 			$this->items[$item]['quantity']++;
@@ -39,7 +52,6 @@ class Cart {
 				'quantity' => 1
 			);
 		}
-		$this->refresh();
 	}
 
 	public function update($item, $quantity) {
@@ -47,14 +59,11 @@ class Cart {
 		if (!in_array($item, array_keys(Repository::$items))) {
 			throw new Exception('Item not found.');
 		}
-		// Permission check
-		if (!empty(Repository::$items[$item]['role']) && !in_array($this->role, Repository::$items[$item]['role'])) {
-			throw new Exception('Role must be: ' . implode(', ', Repository::$items[$item]['role']));
-		}
-		// Availability check
-		if ($quantity > Repository::$items[$item]['available']) {
-			throw new Exception('Item does not have sufficient availability.');
-		}
+		$this->dispatcher->dispatch('cart.beforeUpdate', new GenericEvent($this, array(
+			'item' => $item,
+			'quantity' => $quantity
+		)));
+		
 		// Do the update
 		$this->items[$item]['quantity'] = $quantity;
 		
@@ -74,20 +83,20 @@ class Cart {
 	}
 
 	public function refresh() {
+		$refreshEvent = new GenericEvent($this);
 		foreach ($this->items as $key => $item) {
 			// Item existence check
 			if (!in_array($key, array_keys(Repository::$items))) {
 				$this->remove($key, true);
+				continue;
 			}
-			// Permission check
-			if (!empty(Repository::$items[$key]['role']) && !in_array($this->role, Repository::$items[$key]['role'])) {
-				$this->remove($key, true);
-			}
-			// Availability check
-			if ($item['quantity'] > Repository::$items[$key]['available']) {
-				$this->remove($key, true);
-			}
+			$refreshEvent->setArguments(array(
+				'item' => $key,
+				'reduce' => true
+			));
+			$this->dispatcher->dispatch('cart.refresh', $refreshEvent);
 		}
+		
 	}
 
 	public function role($role = null) {
