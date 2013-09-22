@@ -1,5 +1,5 @@
 {
-    "name": "eda-demo",
+    "name": "event-driven-apps-demo",
     "type": "library",
     "description": "Demo event driven application",
     "keywords": ["demo"],
@@ -16,13 +16,7 @@
 
     "require": {
         "php": ">=5.3.2",
-        "symfony/event-dispatcher": ">=2.1"
-    },
-
-    "autoload": {
-        "psr-0": {
-            "Esa": "src/"
-        }
+        "symfony/event-dispatcher": "2.1.*"
     }
 
 }

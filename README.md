@@ -1,11 +1,14 @@
-# Event Driven Applications Demo
+# Event Driven Cart Demo
 
-This is an example application illustrating the usage of events via
+This is an example cart application illustrating the usage of events via
 Symfony's EventDispatcher library.
 
-It illustrates both a observer setup as well as a "pubsub" setup.
-
 This is refered to by the ["Event Driven Applications" presentation](http://slideshare.net/cjsaylor/event-driven-application).
+
+### Requirements
+
+* PHP 5.3+
+* Webserver (apache2, nginx, etc)
 
 ### Install
 
@@ -15,14 +18,4 @@ php composer.phar install
 
 ### Running
 
-Observer event demo:
-
-```shell
-php src/ObserverDemo.php
-```
-
-Subscriber event demo:
-
-```shell
-php src/SubscriberDemo.php
-```
+Navigate browser to /event-driven-apps-demo/cart/index.php

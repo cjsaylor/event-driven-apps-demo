@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require 'cart.php';
+require dirname(__FILE__) . '/lib/cart.php';
 
 if (empty($_SESSION['cart'])) {
 	$cart = new Cart();
@@ -11,4 +11,4 @@ if (empty($_SESSION['cart'])) {
 
 $cart->role($_GET['role']);
 $_SESSION['cart'] = $cart->export();
-header("Location: /demo/cart/index.php");
+header("Location: /event-driven-apps-demo/cart/index.php");

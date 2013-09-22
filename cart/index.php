@@ -1,7 +1,7 @@
 <?php
 	session_start();
 
-	require 'cart.php';
+	require dirname(__FILE__) . '/lib/cart.php';
 
 	if (empty($_SESSION['cart'])) {
 		$cart = new Cart();

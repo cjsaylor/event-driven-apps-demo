@@ -1,6 +1,6 @@
 <?php
 
-require 'repository.php';
+require dirname(__FILE__) . '/repository.php';
 
 class Cart {
 
