@@ -17,9 +17,12 @@ class AvailabilityPlugin implements EventSubscriberInterface {
 		$cart = $e->getSubject();
 		$item = $e->getArgument('item');
 		$cartItems = $cart->items();
-		$quantity = isset($cartItems[$item]) ? $cartItems[$item]['quantity'] : 0;
-		$quantityOffset = $e->hasArgument('quantity') ? $e->getArgument('quantity') : 0;
-		if (!$this->isAvailable($cart, $item, $quantity, $quantityOffset)) {
+		$offset = $e->hasArgument('quantity') ? $e->getArgument('quantity') : 0;
+		$quantity = isset($cartItems[$item]) ? 
+			$cartItems[$item]['quantity'] : 
+			($offset > 0 ? 0 : 1);
+		
+		if (!$this->isAvailable($cart, $item, $quantity, $offset)) {
 			if (!$e->hasArgument('reduce')) {
 				throw new Exception('Item does not have sufficient availability.');
 			}

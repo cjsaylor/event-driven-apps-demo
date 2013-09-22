@@ -7,7 +7,7 @@ class Repository {
 			'name' => 'Item 1',
 			'role' => array(),
 			'price' => 30,
-			'available' => 3
+			'available' => 4
 		),
 		'item2' => array(
 			'name' => 'Item 2',
