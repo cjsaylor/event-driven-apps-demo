@@ -62,8 +62,8 @@ class Cart {
 
 	public function remove($item, $clear = false) {
 		// Item existence check
-		if (!in_array($item, array_keys(Repository::$items))) {
-			throw new Exception('Item not found.');
+		if (!in_array($item, $this->items)) {
+			return;
 		}
 		// Do the removal
 		if (!$clear && !empty($this->items[$item]) && $this->items[$item]['quantity'] > 1) {
